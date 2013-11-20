@@ -18,13 +18,12 @@ struct Person Person_new(char *name, int age, int height, int weight) {
   who.height =  height;
   who.weight =  weight;
 
+  // who passed back by value -- would disappear otherwise once we lose scope
   return who;
 }
 
-void Person_free(struct Person *who) {
-  assert(who != NULL);
-  free(who->name);
-  free(who);
+void Person_free(struct Person who) {
+  free(who.name);
 }
 
 void Person_print(struct Person who) {
@@ -39,10 +38,10 @@ int main(void)
   struct Person joe   =  Person_new("Joe Alex", 32, 64, 14);
   struct Person frank =  Person_new("Frank Blank", 20, 72, 180);
 
-  printf("Joe is stored at %p\n", &joe);
+  printf("Joe is stored at %p\n",(void *)&joe);
   Person_print(joe);
 
-  printf("Frank is stored at %p\n", &frank);
+  printf("Frank is stored at %p\n",(void *)&frank);
   Person_print(frank);
 
   joe.age += 20;
@@ -51,11 +50,10 @@ int main(void)
   frank.age += 10;
   Person_print(frank);
 
-  // Wondering why this works up to here at all if no memory was allocated for the struct??
-
-  // => malloc: *** error for object 0x7fff5f401880: pointer being freed was not allocated
-  Person_free(&joe);
-  Person_free(&frank);
+  // don't need to free persons themselves since they'll be gone once we lose scope
+  // however we need to free the name (char*) on each
+  Person_free(joe);
+  Person_free(frank);
 
   return 0;
 }
