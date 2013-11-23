@@ -191,7 +191,7 @@ int main(int argc, const char *argv[]) {
       if (addr) {
         Address_print(addr);
       } else {
-        printf("Unable to find address with name %s", name);
+        printf("Unable to find address with name %s\n", name);
       }
       break;
 
