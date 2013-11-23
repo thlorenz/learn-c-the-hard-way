@@ -127,15 +127,29 @@ void Database_list(struct Connection *conn) {
   }
 }
 
+struct Address *Database_find(struct Connection *conn, const char* name) {
+  struct Database db = *conn->db;
+  for (int i = 0; i < MAXROWS; i++) {
+    struct Address *addr = &db.rows[i];
+    if (strcmp(name, addr->name) == 0) return addr;
+  }
+  return NULL;
+}
+
 int main(int argc, const char *argv[]) {
 
   if (argc < 3) die("USAGE: ex17_heap_and_stack <dbfile> <action> [action params]", NULL);
 
   int id = 0;
+  const char *name;
   const char *filename = argv[1];
   const char action = argv[2][0];
 
-  if (argc > 3) id = atoi(argv[3]);
+  if (argc > 3) {
+    // little hacky, but whatever - just an excercise ;)
+    if (action != 'f') id = atoi(argv[3]);
+    else name = argv[3];
+  }
 
   if (id >= MAXROWS) die("There are not that many records", NULL);
 
@@ -169,6 +183,16 @@ int main(int argc, const char *argv[]) {
 
       Database_delete(conn, id);
       Database_write(conn);
+      break;
+
+    case 'f':
+      if(argc != 4) die("Need name to find", conn);
+      struct Address *addr = Database_find(conn, name);
+      if (addr) {
+        Address_print(addr);
+      } else {
+        printf("Unable to find address with name %s", name);
+      }
       break;
 
     default:
