@@ -12,6 +12,17 @@ void die(const char *msg) {
   exit(1);
 }
 
+char *strncpy_term(char *dst, const char *src, const size_t len) {
+  // Wrapper that fixes strncpy null terminator problem
+  // From: http://www.cplusplus.com/reference/cstring/strncpy/
+  // No null-character is implicitly appended at the end of destination if source is longer than num.
+  // Thus, in this case, destination shall not be considered a null terminated C string (reading it as such would overflow).
+
+  char *res = strncpy(dst, src, len);
+  if (res && len > 0) dst[len -1 ] = '\0';
+  return res;
+}
+
 struct Address {
   int id;
   int set;
@@ -73,16 +84,17 @@ void Database_write(struct Connection *conn) {
   if (rc == -1) die("Failed to flush database");
 }
 
+
 void Database_set(struct Connection *conn, int id, const char *name, const char *email) {
   struct Address *addr = &conn->db->rows[id];
   if (addr->set) die("Already set, delete it first");
 
   addr->set = 1;
 
-  char *res = strncpy(addr->name, name, MAXDATA);
+  char *res = strncpy_term(addr->name, name, MAXDATA);
   if (!res) die("Name copy failed");
 
-  res = strncpy(addr->email, email, MAXDATA);
+  res = strncpy_term(addr->email, email, MAXDATA);
   if (!res) die("Email copy failed");
 }
 
