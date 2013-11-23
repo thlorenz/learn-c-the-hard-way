@@ -67,6 +67,14 @@ struct Connection *Database_open(const char *filename, char mode) {
   return conn;
 }
 
+void Database_close(struct Connection *conn) {
+  if (conn) {
+    if (conn->file) fclose(conn->file);
+    if (conn->db) free(conn->db);
+    free(conn);
+  }
+}
+
 void Database_create(struct Connection *conn) {
   for (int i = 0; i < MAXROWS; i++) {
     // init addr by creating prototype
@@ -77,7 +85,7 @@ void Database_create(struct Connection *conn) {
 
 void Database_write(struct Connection *conn) {
   rewind(conn->file);
-  int rc = fwrite(conn->db, sizeof(struct Database), 1, conn->file);
+  size_t rc = fwrite(conn->db, sizeof(struct Database), 1, conn->file);
   if (rc != 1) die("Failed to write to database");
 
   rc = fflush(conn->file);
@@ -165,5 +173,7 @@ int main(int argc, const char *argv[]) {
     default:
       die("Invalid action, only: c=create, g=get, s=set, d=del, l=list");
   }
+
+  Database_close(conn);
   return 0;
 }
