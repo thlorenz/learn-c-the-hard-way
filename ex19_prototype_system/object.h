@@ -1,10 +1,14 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
+#include <stdlib.h>
+
 typedef enum {
   NORTH, SOUTH, EAST, WEST
 } Direction;
 
+// all proto structs will have Object as first field
+// that way they all can pe treated as just an Object struct
 typedef struct {
   char *description;
   int (*init)(void *self);
