@@ -10,7 +10,7 @@
 #define debug(M, ...)
 #else
 // debug("format", arg ..) => fprintf(stderr, "DEBUG %s:%d: format\n", file, line, arg ...)
-#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d inside: %s:\t" M "\n", __FILE__,  __LINE__, __FUNCTION__, ##__VA_ARGS__)
+#define debug(M, ...) fprintf(stderr, "\nDEBUG " M "\n    at %s (%s:%d)\n", ##__VA_ARGS__, __func__, __FILE__,  __LINE__)
 #endif
 
 // safe readable version of errno
@@ -18,11 +18,11 @@
 
 // log_* work just like debug, but cannot be compiled out
 // more predefined macros here: http://gcc.gnu.org/onlinedocs/cpp/Standard-Predefined-Macros.html
-#define log_err(M, ...) fprintf(stderr, "[ERR] (%s:%d: inside: %s errno: %s)\t" M "\n", __FILE__,  __LINE__, __FUNCTION__, clean_errno(), ##__VA_ARGS__)
+#define log_err(M, ...) fprintf(stderr, "\n[ERR] " M "\n    at %s (%s:%d) errno: %s \n", ##__VA_ARGS__, __func__, __FILE__,  __LINE__, clean_errno())
 
-#define log_warn(M, ...) fprintf(stderr, "[WARN] (%s:%d: inside: %s errno: %s)\t" M "\n", __FILE__, __LINE__, __FUNCTION__, clean_errno(), ##__VA_ARGS__)
+#define log_warn(M, ...) fprintf(stderr, "\n[WARN] " M "\n    at %s (%s:%d) errno: %s \n", ##__VA_ARGS__, __func__, __FILE__,  __LINE__, clean_errno())
 
-#define log_info(M, ...) fprintf(stderr, "[INFO] (%s:%d: inside: %s)\t" M "\n", __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__)
+#define log_info(M, ...) fprintf(stderr, "\n[INFO] " M "\n    at %s (%s:%d)\n", ##__VA_ARGS__, __func__, __FILE__,  __LINE__)
 
 // enhanced assert? check that A is true, otherwise log error M then jump to error: for cleanup
 #define check(A, M, ...) if(!(A)) { log_err(M, ##__VA_ARGS__); errno=0; goto error; }
