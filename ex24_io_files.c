@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include "dbg.h"
 
 #define MAXDATA 100
@@ -27,20 +28,33 @@ typedef struct {
   float income;
 } Person;
 
+void trim(char* s) {
+  char* lastchar = s;
+  while (*s != '\0') {
+    if (!isspace(*s)) lastchar = s;
+    s++;
+  }
+  *(lastchar + 1) = '\0';
+}
+
 int main(void) {
   Person you = { .age = 0 };
-  int i = 0;
   char *in = NULL;
+
+  // preferring fgets over fscanf to read strings (reading too much, eating enter key, etc.)
+  // also NEVER use gets
 
   // first name
   printf("first name? ");
   in = fgets(you.first_name, MAXDATA - 1, stdin);
   check(in != NULL, "failed to read first name");
+  trim(you.first_name);
 
   // last name
   printf("last name? ");
   in = fgets(you.last_name, MAXDATA - 1, stdin);
   check(in != NULL, "failed to read last name");
+  trim(you.last_name);
 
   // age
   printf("age? ");
@@ -66,8 +80,8 @@ int main(void) {
 
   printf("----- RESULTS -----\n");
 
-  printf("First Name: %s", you.first_name);
-  printf("Last Name: %s", you.last_name);
+  printf("First Name: [%s]\n", you.first_name);
+  printf("Last Name: [%s]\n", you.last_name);
   printf("Age: %d\n", you.age);
   printf("Eyes: %s\n", EYE_COLOR_NAMES[you.eyes]);
   printf("Income: %f\n", you.income);
