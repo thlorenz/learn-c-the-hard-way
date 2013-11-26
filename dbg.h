@@ -20,7 +20,7 @@
 
 // log_* work just like debug, but cannot be compiled out
 // more predefined macros here: http://gcc.gnu.org/onlinedocs/cpp/Standard-Predefined-Macros.html
-#define log_err(M, ...) fprintf(stderr,  "\n\33[31mERR\33[39m  " M "\n  \33[90m at %s (%s:%d) \33[94merrno: %s\33[90m", ##__VA_ARGS__, __func__, __FILE__, __LINE__, clean_errno())
+#define log_err(M, ...) fprintf(stderr,  "\n\33[31mERR\33[39m  " M "\n  \33[90m at %s (%s:%d) \33[94merrno: %s\33[39m", ##__VA_ARGS__, __func__, __FILE__, __LINE__, clean_errno())
 
 #define log_warn(M, ...) fprintf(stderr, "\n\33[91mWARN\33[39m " M "\n  \33[90m at %s (%s:%d) \33[94merrno: %s\33[39m", ##__VA_ARGS__, __func__, __FILE__, __LINE__, clean_errno())
 
