@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "dbg.h"
+#include "../dbg.h"
 
 void test_debug() {
   debug("I have brown hair");
