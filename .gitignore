@@ -16,3 +16,6 @@
 *.exe
 *.out
 *.app
+
+# Other annoying stuff being generated
+*.dSYM
